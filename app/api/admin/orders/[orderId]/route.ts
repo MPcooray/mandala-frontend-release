@@ -1,19 +1,21 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import type { NextRequest } from 'next/server';
+// import type { RouteContext } from 'next';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { orderId: string } }
+  request: NextRequest,
+  context: any
 ) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.accessToken) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/orders/${params.orderId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/orders/${context.params.orderId}`, {
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
       },
@@ -32,4 +34,4 @@ export async function GET(
     console.error('Error fetching order:', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
-} 
+}
