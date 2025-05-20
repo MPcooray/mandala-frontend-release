@@ -38,7 +38,7 @@ interface Product {
 }
 
 export default function ProductDetailPage() {
-  const { id } = useParams();
+  const id = useParams()?.id?.toString();
   const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState("");

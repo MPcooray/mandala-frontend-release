@@ -1,10 +1,7 @@
 import { NextRequest } from "next/server";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const id = params.id;
+export async function GET(req: NextRequest, context: any) {
+  const id = context?.params?.id;
 
   try {
     const res = await fetch(`http://localhost:8080/api/orders/${id}`, {
@@ -25,6 +22,7 @@ export async function GET(
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
+    console.error("Server error:", err);
     return new Response("Server error", { status: 500 });
   }
 }

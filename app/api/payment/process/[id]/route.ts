@@ -1,11 +1,7 @@
-// app/api/payment/process/[id]/route.ts
 import { NextResponse } from "next/server";
 
-export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+export async function POST(req: any, context: any) {
+  const id = context?.params?.id;
   const body = await req.json();
 
   try {

@@ -3,12 +3,12 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
 export async function PUT(
-  request: Request,
-  { params }: { params: { orderId: string } }
+  request: any,
+  context: any
 ) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.accessToken) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -20,11 +20,13 @@ export async function PUT(
       return new NextResponse('Status is required', { status: 400 });
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${params.orderId}/status`, {
+    const orderId = context?.params?.orderId;
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.accessToken}`,
+        Authorization: `Bearer ${session.accessToken}`,
       },
       body: JSON.stringify({ status }),
     });
@@ -42,4 +44,4 @@ export async function PUT(
     console.error('Error updating order status:', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
-} 
+}
